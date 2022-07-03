@@ -6,9 +6,7 @@ public class GazePointer : MonoBehaviour
     private GazeInteractable gazeInteractable;
     private Collider LastFrameObjectHit;
     private Collider ObjectHit;
-
-    //
-    private float currentGazeTime;
+    private float gazeStartTime;
 
     void FixedUpdate()
     {
@@ -22,16 +20,15 @@ public class GazePointer : MonoBehaviour
         {
             ObjectHit = gazeInteractableHit.collider;
 
-            // Check if our interactable is valid.
             if (!ObjectHit)
             {
-                return;
+                Debug.Log("This never happens right?");
             }
-            
+
             // Check if we hit a new or same object.
             if (LastFrameObjectHit != ObjectHit)
             {
-                currentGazeTime = 0;
+                gazeStartTime = Time.time;
 
                 GazeInteractable newGazeInteractable = gazeInteractableHit.collider.GetComponent<GazeInteractable>();
                 if (newGazeInteractable != null)
@@ -48,18 +45,27 @@ public class GazePointer : MonoBehaviour
                 }
                 else
                 {
+                    if (gazeInteractable)
+                    { 
+                        gazeInteractable.GazeEnd();
+                        gazeInteractable = null;
+                    }
                     // Object isn't an interactable.
                     return;
                 }
             }
 
             // Same object has been hit, progress gaze time.
-            if (!gazeInteractable.IsActivated)
+            if (gazeInteractable && !gazeInteractable.IsActivated)
             {
-                currentGazeTime += Time.deltaTime;
-                Debug.Log(gazeInteractableHit.collider.gameObject.name + ": " + currentGazeTime);
+                float activateTime = (gazeStartTime + gazeInteractable.GazeTimeToActivate) - Time.time;
+                float progress = 1 - (activateTime / gazeInteractable.GazeTimeToActivate);
+                progress = Mathf.Clamp(progress, 0, 1);
 
-                if (currentGazeTime >= gazeInteractable.GazeTimeToActivate)
+                gazeInteractable.GazeStay(progress);
+
+                // Progress is from 0-1. 0 being the start time and 1 the end time to activate.
+                if (progress == 1)
                 {
                     gazeInteractable.GazeActivated();
                 }

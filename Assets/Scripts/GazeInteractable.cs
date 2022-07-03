@@ -19,7 +19,7 @@ public class GazeInteractable : MonoBehaviour
     [SerializeField]
     private UnityEvent OnGazeStart;
     [SerializeField]
-    private UnityEvent OnGazeStay;
+    private UnityEvent<float> OnGazeStay;
     [SerializeField]
     private UnityEvent OnGazeEnd;
     [SerializeField]
@@ -30,9 +30,9 @@ public class GazeInteractable : MonoBehaviour
         OnGazeStart?.Invoke();
     }
     
-    public void GazeStay()
+    public void GazeStay(float progress)
     {
-        OnGazeStay?.Invoke();
+        OnGazeStay?.Invoke(progress);
     }
 
     public void GazeEnd() 
