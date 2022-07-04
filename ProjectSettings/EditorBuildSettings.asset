@@ -8,6 +8,24 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Spider - 0.unity
+    guid: 6f966ce3838ba9e4787f042681c741c3
+  - enabled: 1
+    path: Assets/Scenes/Spider - 1.unity
+    guid: fd68f7b0654465243af31301adf8b1df
+  - enabled: 1
+    path: Assets/Scenes/Spider - 2.unity
+    guid: bb574e0c14b513040a73cdc558279bae
+  - enabled: 1
+    path: Assets/Scenes/Spider - 3.unity
+    guid: 747724758da5a2e4aa6ddd2a0310afbb
+  - enabled: 1
+    path: Assets/Scenes/Spider - 4.unity
+    guid: 7da2ca78991f30c4a99d9a2e0960aee2
+  - enabled: 1
+    path: Assets/Scenes/Spider - 5.unity
+    guid: a4d56d41497e5634fa4dac342714f401
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: d1182b287d597234488794099860ae1d, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4710c3acc87f26c4bb19c23e37a2ed05, type: 2}
