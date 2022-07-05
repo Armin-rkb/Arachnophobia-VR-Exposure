@@ -2,28 +2,20 @@ using UnityEngine;
 
 public class GazePointer : MonoBehaviour
 {
-    // Todo: Add layermask
     private GazeInteractable gazeInteractable;
     private Collider LastFrameObjectHit;
     private Collider ObjectHit;
     private float gazeStartTime;
 
-    void FixedUpdate()
+    void Update()
     {
-        // Debug Ray
         Vector3 forward = transform.TransformDirection(Vector3.forward) * 100;
         Debug.DrawRay(transform.position, forward, Color.red);
-        //
 
         RaycastHit gazeInteractableHit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out gazeInteractableHit)) // Layermask)
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out gazeInteractableHit))
         {
             ObjectHit = gazeInteractableHit.collider;
-
-            if (!ObjectHit)
-            {
-                Debug.Log("This never happens right?");
-            }
 
             // Check if we hit a new or same object.
             if (LastFrameObjectHit != ObjectHit)
@@ -53,6 +45,13 @@ public class GazePointer : MonoBehaviour
                     // Object isn't an interactable.
                     return;
                 }
+            }
+
+            if (!gazeInteractable)
+            {
+                ObjectHit = null;
+                LastFrameObjectHit = null;
+                return;
             }
 
             // Same object has been hit, progress gaze time.

@@ -46,4 +46,9 @@ public class GazeInteractable : MonoBehaviour
         IsActivated = true;
         OnGazeActivated?.Invoke();
     }
+
+    public void GazeInteractableReset()
+    {
+        IsActivated = false;
+    }
 }

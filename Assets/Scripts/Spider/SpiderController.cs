@@ -1,50 +1,47 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class SpiderController : MonoBehaviour
 {
-    public enum SceneToLoad
-    {
-        NextScene,
-        PreviousScene
-    }
-
     private int currentSpiderScene = 0;
-    private const int firstScene = 5;
+    private const int firstScene = 0;
     private const int lastScene = 5;
     private const string baseSceneString = "Spider - ";
+    
+    [SerializeField]
+    private UnityEvent OnLevelLoadStart;
+    [SerializeField]
+    private UnityEvent<int> OnLevelLoadEnd;
 
     // Object in front of camera to fade in/out view.
     [SerializeField]
     private Material fadeMaterial;
 
-    public void LoadNewScene(SceneToLoad sceneToLoad)
+    public void LoadNewScene(bool isNextScene)
     {
         int spiderSceneToLoad = currentSpiderScene;
 
-        if (sceneToLoad == SceneToLoad.NextScene)
-        {
-            spiderSceneToLoad += 1;
-        }
-        else if (sceneToLoad == SceneToLoad.PreviousScene)
-        {
-            spiderSceneToLoad -= 1;
-        }
-        Mathf.Clamp(spiderSceneToLoad, firstScene, lastScene);
+        spiderSceneToLoad += isNextScene ? 1 : -1;
+        spiderSceneToLoad = Mathf.Clamp(spiderSceneToLoad, firstScene, lastScene);
         StartCoroutine(StartLoad(spiderSceneToLoad));
     }
 
     private IEnumerator StartLoad(int spiderSceneToLoad)
     {
         yield return StartCoroutine(FadeLoadingScreen(1, 1.5f));
+        OnLevelLoadStart?.Invoke();
         AsyncOperation UnloadOperation = SceneManager.UnloadSceneAsync(baseSceneString + currentSpiderScene);
         AsyncOperation LoadOperation = SceneManager.LoadSceneAsync(baseSceneString + spiderSceneToLoad, LoadSceneMode.Additive);
         while (!UnloadOperation.isDone && !LoadOperation.isDone)
         {
             yield return null;
         }
+        currentSpiderScene = spiderSceneToLoad;
+
         yield return StartCoroutine(FadeLoadingScreen(0, 1.5f));
+        OnLevelLoadEnd?.Invoke(currentSpiderScene);
     }
 
     IEnumerator FadeLoadingScreen(float targetAlpha, float duration)
